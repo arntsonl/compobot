@@ -101,7 +101,7 @@ class LogBot(irc.IRCClient):
             # load each plugin
             for pluginname in os.listdir('plugins'):
 
-                if os.path.isdir( os.path.join('plugins', pluginname)):
+                if not pluginname.startswith('.') and os.path.isdir( os.path.join('plugins', pluginname)):
 
                     print 'Loading Plugin: ', pluginname
 
