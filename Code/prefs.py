@@ -36,7 +36,6 @@ class Preferences:
             if line[0] == "#":
                 continue
             line=line.strip("\r\n")
-            print line
             command, value = line.split("=")
             if command in validCmd:
                 self.data[command] = value
