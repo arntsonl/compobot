@@ -28,7 +28,7 @@ class Preferences:
             prefFile.close()
         inFile = open(filename, "r")
         self.readPreferences(inFile)
-        prefFile.close()
+        inFile.close()
 
     def readPreferences(self, inFile):
         fileContent = inFile.readlines()
