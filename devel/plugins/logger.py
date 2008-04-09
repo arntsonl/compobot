@@ -25,5 +25,8 @@ class MessageLogger(base.Plugin):
 
     def any_msg(self, user, channel, msg):
         if not self.done:
-            self.log("[%s] <%s> %s" % (channel, user, msg))
+            if not user == self.bot.username:
+                self.log("[%s] <%s> %s" % (channel, user, msg))
+            else:
+                self.log("[%s] <~~To Me> %s" % (channel, msg))
         return None
