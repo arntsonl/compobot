@@ -40,3 +40,6 @@
 [22:02:27] [AUTH] <> *** No identd (auth) response
 [22:02:27] [CompoBot-RB[0]] <> *** Your host is leguin.freenode.net[leguin.acc.umu.se/6667], running version hyperion-1.0.2b
 [22:02:33] [CompoBot-RB[0]] <RB[0]> !QUIT
+[18:51:28] [AUTH] <> *** Looking up your hostname...
+[18:51:28] [AUTH] <> *** Checking ident
+[18:51:28] [AUTH] <> *** Found your hostname
