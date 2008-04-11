@@ -1,6 +1,6 @@
 import base
 
-class CommandParser(base.Plugin):
+class Plugin(base.Plugin):
     def __init__(self, bot, prefs):
         base.Plugin.__init__(self, bot, prefs)
 

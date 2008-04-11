@@ -3,7 +3,7 @@ from twisted.words.protocols import irc
 from twisted.internet import reactor, protocol
 from twisted.python import log
 
-import sys
+import sys, os
 
 import prefs
 prefs = prefs.Preferences().data
@@ -19,8 +19,13 @@ class SimpleBot(irc.IRCClient):
         self.loops = 0
 
     def register_plugin(self, plug):
-        plug = plug(self, prefs)
-        self.plugins.append(plug)
+        if type(plug) is type(""):
+            plug = get_plugin(plug)
+        if plug:
+            plug = plug(self, prefs)
+            self.plugins.append(plug)
+        else:
+            print "plugin %s could not be loaded"%plug
 
     def send_to_plugins(self, command, args):
         for i in self.plugins:
@@ -48,10 +53,6 @@ class SimpleBot(irc.IRCClient):
     def privmsg(self, user, channel, msg):
         """This will get called when the bot receives a message."""
         user = user.split('!', 1)[0]
-
-##        if msg == "QUIT BOT":
-##            self.send_to_plugins("close", ())
-##            reactor.stop()
 
         self.send_to_plugins("any_msg", (user, channel, msg))
 
@@ -122,13 +123,26 @@ def run_factory(factory):
 
     reactor.run()
 
+def get_plugin(name):
+    try:
+        try:
+            if not "plugins" in sys.path:
+                sys.path.append("plugins")
+            a = __import__(name)
+        except:
+            pth = os.path.join(os.path.split(__file__)[0], "plugins")
+            if not pth in sys.path:
+                sys.path.append(pth)
+            a = __import__(name)
+        return a.Plugin
+    except:
+        pass
+
 
 if __name__ == "__main__":
     f = SimpleBotFactory()
 
-    import plugins
-    from plugins import logger, command_parser
-    f.register_plugin(plugins.logger.MessageLogger)
-    f.register_plugin(plugins.command_parser.CommandParser)
+    f.register_plugin("logger")
+    f.register_plugin("command_parser")
     run_factory(f)
         

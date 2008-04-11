@@ -3,7 +3,7 @@ import time
 
 import base
 
-class MessageLogger(base.Plugin):
+class Plugin(base.Plugin):
     """
     A simple plugin that will store all messages sent.
     """
