@@ -11,7 +11,7 @@ prefs = prefs.Preferences().data
 class SimpleBot(irc.IRCClient):
     nickname = prefs["nick"]
     password = prefs["password"]
-    channel = prefs["channel"]
+    channel = '#' + prefs["channel"]
 
     def __init__(self):
         self.prefs = prefs
@@ -59,7 +59,6 @@ class SimpleBot(irc.IRCClient):
     def privmsg(self, user, channel, msg):
         """This will get called when the bot receives a message."""
         user = user.split('!', 1)[0]
-        self.msg(self.channel, "Test...")
 
         self.send_to_plugins("any_msg", (user, channel, msg))
 
@@ -88,9 +87,12 @@ class SimpleBot(irc.IRCClient):
         self.send_to_plugins("reactor_chance", (reactor,))
         reactor.callLater(0, self.make_reactor_call, ())
 
-    def stop_serving(self):
+    def __kill_reactor(self, *blank):
         self.send_to_plugins("close", ())
         reactor.stop()
+
+    def stop_serving(self):
+        reactor.callLater(0.5, self.__kill_reactor, ())
 
 
 class SimpleBotFactory(protocol.ClientFactory):
