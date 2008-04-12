@@ -9,7 +9,8 @@ server=irc.freenode.net\n\
 port=6667\n\
 logfile=pyweek_log1.txt\n"
 
-validCmd = ["nick","channel","server","port","logfile"]
+validCmd = ["nick","channel","server","port",
+            "logfile","plugins","password"]
 
 class Preferences(object):
     """
@@ -32,14 +33,66 @@ class Preferences(object):
         self.readPreferences(inFile)
         inFile.close()
 
+    def get_value(self, val):
+        if val[0] == '"' and val[-1] == '"':
+            return val[1:-1]
+        else:
+            try:
+                a = float(val)
+                try:
+                    if int(val) == a:
+                        a = int(val)
+                except:
+                    pass
+                return a
+            except:
+                return val
+        return "Strange!!! - was val: %s"%val
+
+    def get_list(self, value, f, lineN):
+        num = 0
+        cur = value
+        for line in f:
+            if num-1 > lineN:
+                if line[0] == "#":
+                    continue
+                line=line.strip("\r\n")
+
+                cur = cur + line
+
+                if line[-1] == "]": #end list
+                    break
+            num += 1
+
+        values = cur[1:-1].split(",")
+        for i in xrange(len(values)):
+            values[i] = values[i].strip()
+
+        ret = []
+        for i in values:
+            ret.append(self.get_value(i))
+        return ret, num+1
+
     def readPreferences(self, inFile):
         fileContent = inFile.readlines()
+        lineN = 0
+        line_skip = 0
         for line in fileContent:
+            if lineN<= line_skip:
+                lineN += 1
+                continue
             if line[0] == "#":
                 continue
             line=line.strip("\r\n")
+                
             command, value = line.split("=")
+            if value[0] == "[":
+                value, line_skip = self.get_list(value, fileContent, lineN)
+            else:
+                value = self.get_value(value)
             if command in validCmd:
                 self.data[command] = value
-        
+            lineN += 1
+a = Preferences()
+print a.data
         

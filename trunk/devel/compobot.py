@@ -10,6 +10,8 @@ prefs = prefs.Preferences().data
 
 class SimpleBot(irc.IRCClient):
     nickname = prefs["nick"]
+    password = prefs["password"]
+    channel = prefs["channel"]
 
     def __init__(self):
         self.prefs = prefs
@@ -18,14 +20,18 @@ class SimpleBot(irc.IRCClient):
 
         self.loops = 0
 
+        for i in prefs['plugins']:
+            self.register_plugin(i)
+
     def register_plugin(self, plug):
+        orig = plug
         if type(plug) is type(""):
             plug = get_plugin(plug)
         if plug:
             plug = plug(self, prefs)
             self.plugins.append(plug)
         else:
-            print "plugin %s could not be loaded"%plug
+            print "plugin '%s' could not be loaded\nContinuing merrily..."%orig
 
     def send_to_plugins(self, command, args):
         for i in self.plugins:
@@ -53,13 +59,14 @@ class SimpleBot(irc.IRCClient):
     def privmsg(self, user, channel, msg):
         """This will get called when the bot receives a message."""
         user = user.split('!', 1)[0]
+        self.msg(self.channel, "Test...")
 
         self.send_to_plugins("any_msg", (user, channel, msg))
 
-        if self.prefs["nick"] in msg:
+        if self.nickname in msg:
             self.send_to_plugins("msg_with_name_in_it", (user, channel, msg))
 
-        elif channel == self.prefs["nick"]:
+        elif channel == self.nickname:
             self.send_to_plugins("priv_msg", (user, channel, msg))
 
         else:
@@ -142,7 +149,5 @@ def get_plugin(name):
 if __name__ == "__main__":
     f = SimpleBotFactory()
 
-    f.register_plugin("logger")
-    f.register_plugin("command_parser")
     run_factory(f)
         
