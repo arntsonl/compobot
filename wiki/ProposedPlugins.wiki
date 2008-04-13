@@ -11,7 +11,7 @@
 
 = Possible Plugins = 
   * advanced chatter  basically import the pyaiml lib and write an ai for it
-      you would need special variations for different channel and stuff - but for pyweek
+      You would need special variations for different channel and stuff - but for pyweek
       it could hold some general python/pygame/pyglet/whatever info for people -
       and then discuss games with them ;)
   * PSR game - Paper, Scissors, Rock -- basically, request a game with each member of a chat room - if they reject pas - otherwise play a game. Also allow users to request a game. Just to make sure the plugins have full functionality.
