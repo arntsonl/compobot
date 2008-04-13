@@ -1,0 +1,29 @@
+Make sending messages add them to the logger - do this by calling priv_msg with the correct args...
+Change names of methods of plugins over to Keeyai's version.
+Restore or write doc-strings for everything.
+Write special wrapper functions for interacting with the server - like "msg", etc. - to the bot, ie
+	Make it so that when a plugin wants to send a message - it calls:
+		"self.bot.send_message(msg)"
+	This should allow us to make a queue - ie - so only one plugin may "respond" to a msg,
+	that way we don't have numerous plugins saying stuff when you give them a command or something...
+
+Add ability to register/login to nickname - so we cand send private msg's....
+Make chatter respond ot private messages, privately ;)
+Find out how to get the bot to have admin access on "ChanServ" protected servers.
+
+Write a topic countdown plugin - for pyweek.
+Write a simple "game" plugin - that allows you to play a game with a user,
+	make sure to block "chatter" plugin from replying to messages!
+	Game will be a simple "RockPaperScissors" game:
+		request a game from next user in list:
+			!if no play - add to ignore and go on
+			!else - request R, P, or S
+			randomly pick R, P, or S
+			scan results:
+				!if my pick == users pick - request a redo
+				!elif my pick > user pick - say "I win!"
+					add to ignore list.
+				!else - request new game
+	Also - if a user priv_msgs the bot with "Want to play a game?"
+		 say random pick of ["Sure thing!", "Absolutely", "What are we waiting for?", "Yes :)"]
+		 begin game-play function again - only skip the user part.
