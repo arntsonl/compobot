@@ -16,4 +16,6 @@ class Plugin(base.Plugin):
                     self.bot.stop_serving()
                 else:
                     self.bot.msg(self.bot.channel, "Wrong password!")
+            return True
+        return False
                 

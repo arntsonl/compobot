@@ -8,6 +8,36 @@ import sys, os
 import prefs
 prefs = prefs.Preferences().data
 
+class PluginList(object):
+    def __init__(self):
+        self.list = []
+        self.descriptors = []
+
+    def add_item(self, item, priority):
+        self.descriptors.append([item, priority])
+        self.build_list()
+
+    def build_list(self):
+        def sort_func(x, y):
+            if x[1] > y[1]:
+                return -1
+            elif x[1] == y[1]:
+                return 0
+            return 1
+        self.descriptors.sort(sort_func)
+        new = []
+        for i in self.descriptors:
+            new.append(i[0])
+        self.list = new
+
+    def dispatch_event(self, command, args, do_all):
+        for i in self.list:
+            if not do_all:
+                print "sent to", i
+            a = getattr(i, command)(*args)
+            if a == True and not do_all:
+                break
+
 class SimpleBot(irc.IRCClient):
     nickname = prefs["nick"]
     password = prefs["password"]
@@ -16,7 +46,7 @@ class SimpleBot(irc.IRCClient):
     def __init__(self):
         self.prefs = prefs
 
-        self.plugins = []
+        self.plugins = PluginList()
 
         self.loops = 0
 
@@ -24,18 +54,21 @@ class SimpleBot(irc.IRCClient):
             self.register_plugin(i)
 
     def register_plugin(self, plug):
+        if type(plug) is type([]):
+            plug, priority = plug
+        else:
+            priority = len(self.plugins)
         orig = plug
         if type(plug) is type(""):
             plug = get_plugin(plug)
         if plug:
             plug = plug(self, prefs)
-            self.plugins.append(plug)
+            self.plugins.add_item(plug, priority)
         else:
             print "plugin '%s' could not be loaded\nContinuing merrily..."%orig
 
-    def send_to_plugins(self, command, args):
-        for i in self.plugins:
-            getattr(i, command)(*args)
+    def send_to_plugins(self, command, args, do_all=False):
+        self.plugins.dispatch_event(command, args, do_all)
 
     def connectionMade(self):
         """Called when we connect to the server."""
@@ -84,7 +117,7 @@ class SimpleBot(irc.IRCClient):
         self.send_to_plugins("change_nick", (old_nick, new_nick))
 
     def make_reactor_call(self, *blank):
-        self.send_to_plugins("reactor_chance", (reactor,))
+        self.send_to_plugins("reactor_chance", (reactor,), True)
         reactor.callLater(0, self.make_reactor_call, ())
 
     def __kill_reactor(self, *blank):
