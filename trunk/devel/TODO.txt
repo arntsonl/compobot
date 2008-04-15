@@ -1,14 +1,7 @@
-Make sending messages add them to the logger - do this by calling priv_msg with the correct args...
-Change names of methods of plugins over to Keeyai's version.
-Restore or write doc-strings for everything.
-Write special wrapper functions for interacting with the server - like "msg", etc. - to the bot, ie
-	Make it so that when a plugin wants to send a message - it calls:
-		"self.bot.send_message(msg)"
-	This should allow us to make a queue - ie - so only one plugin may "respond" to a msg,
-	that way we don't have numerous plugins saying stuff when you give them a command or something...
+Restore or write doc-strings for everything  ~~Plugins could still use some stuff - and the main bot itself.
 
 Add ability to register/login to nickname - so we cand send private msg's....
-Make chatter respond ot private messages, privately ;)
+Make chatter respond to private messages, privately ;)
 Find out how to get the bot to have admin access on "ChanServ" protected servers.
 
 Write a topic countdown plugin - for pyweek.

@@ -4,7 +4,7 @@ class Plugin(base.Plugin):
     def __init__(self, bot, prefs):
         base.Plugin.__init__(self, bot, prefs)
 
-    def priv_msg(self, user, channel, msg):
+    def privatemessage(self, user, channel, msg):
         cmd = msg.split()
         if cmd[0] == "DO": #make sure this is a command not just a message!
             cmd = cmd[1::]

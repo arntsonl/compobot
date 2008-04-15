@@ -34,9 +34,12 @@ class PluginList(object):
         for i in self.list:
             if not do_all:
                 print "sent to", i
-            a = getattr(i, command)(*args)
-            if a == True and not do_all:
-                break
+            try:
+                a = getattr(i, command)(*args)
+                if a == True and not do_all:
+                    break
+            except:
+                print "Error calling %s in plugin: %s with args: %s"%(command, i, args)
 
 class SimpleBot(irc.IRCClient):
     nickname = prefs["nick"]
@@ -78,12 +81,12 @@ class SimpleBot(irc.IRCClient):
     def connectionLost(self, *other):
         """Called if we lose the connection."""
         irc.IRCClient.connectionLost(self)
-        self.send_to_plugins("close", ())
+        self.send_to_plugins("disconnect", ())
 
     def signedOn(self):
         """Called when bot has successfully signed on to server."""
         self.join(self.factory.channel)
-        self.send_to_plugins("signed_on", ())
+        self.send_to_plugins("signon", ())
 
     def joined(self, channel):
         """This will get called when the bot joins the channel."""
@@ -93,17 +96,17 @@ class SimpleBot(irc.IRCClient):
         """This will get called when the bot receives a message."""
         user = user.split('!', 1)[0]
 
-        self.send_to_plugins("any_msg", (user, channel, msg))
+        self.send_to_plugins("anymessage", (user, channel, msg))
 
         if self.nickname in msg:
-            self.send_to_plugins("msg_with_name_in_it", (user, channel, msg))
+            self.send_to_plugins("nickmessage", (user, channel, msg))
 
         elif channel == self.nickname:
-            self.send_to_plugins("priv_msg", (user, channel, msg))
+            self.send_to_plugins("privatemessage", (user, channel, msg))
 
         else:
             #regular msg?
-            self.send_to_plugins("msg", (user, channel, msg))
+            self.send_to_plugins("generalmessage", (user, channel, msg))
 
     def action(self, user, channel, msg):
         """This will get called when the bot sees someone do an action."""
@@ -114,14 +117,14 @@ class SimpleBot(irc.IRCClient):
         """Called when an IRC user changes their nickname."""
         old_nick = prefix.split("!")[0]
         new_nick = params[0]
-        self.send_to_plugins("change_nick", (old_nick, new_nick))
+        self.send_to_plugins("usernickchange", (old_nick, new_nick))
 
     def make_reactor_call(self, *blank):
-        self.send_to_plugins("reactor_chance", (reactor,), True)
+        self.send_to_plugins("reactorchance", (reactor,), True)
         reactor.callLater(0, self.make_reactor_call, ())
 
     def __kill_reactor(self, *blank):
-        self.send_to_plugins("close", ())
+        self.send_to_plugins("disconnect", ())
         reactor.stop()
 
     def stop_serving(self):
