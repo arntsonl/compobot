@@ -23,7 +23,7 @@ class Plugin(base.Plugin):
         self.file.close()
         self.done = True
 
-    def any_msg(self, user, channel, msg):
+    def anymessage(self, user, channel, msg):
         if not self.done:
             if not user == self.bot.username:
                 self.log("[%s] <%s> %s" % (channel, user, msg))

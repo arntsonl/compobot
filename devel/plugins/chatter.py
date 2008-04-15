@@ -30,13 +30,13 @@ class Plugin(base.Plugin):
                     return user+": "+i[0]
         return ""
 
-    def priv_msg(self, user, channel, msg):
+    def privatemessage(self, user, channel, msg):
         if not user == self.bot.username: #check we aren't talking to ourself!
             self.bot.msg(self.bot.channel, self.get_message(user))
             return True
         return False
 
-    def msg_with_name_in_it(self, user, channel, msg):
+    def nickmessage(self, user, channel, msg):
         if not user == self.bot.username: #check we aren't talking to ourself!
             self.bot.msg(self.bot.channel, self.get_message(user))
             return True
