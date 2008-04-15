@@ -13,6 +13,8 @@ class Plugin(base.Plugin):
         self.file = open(prefs["logfile"], "a")
         self.done = False
 
+        self.name = "logger"
+
     def log(self, message):
         """Write a message to the file."""
         timestamp = time.strftime("[%H:%M:%S]", time.localtime(time.time()))
