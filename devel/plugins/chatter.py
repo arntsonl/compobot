@@ -31,15 +31,15 @@ class Plugin(base.Plugin):
         return ""
 
     def priv_msg(self, user, channel, msg):
-        if (not msg.split()[0] == "DO") and\
-           (self.take_command == False):
-            if not user == self.bot.username: #check we aren't talking to ourself!
+        if not user == self.bot.username: #check we aren't talking to ourself!
             self.bot.msg(self.bot.channel, self.get_message(user))
+            return True
+        return False
 
     def msg_with_name_in_it(self, user, channel, msg):
-        if (not msg.split()[0] == "DO") and\
-           (self.take_command == False):
-            if not user == self.bot.username: #check we aren't talking to ourself!
+        if not user == self.bot.username: #check we aren't talking to ourself!
             self.bot.msg(self.bot.channel, self.get_message(user))
+            return True
+        return False
 
         

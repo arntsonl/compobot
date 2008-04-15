@@ -12,6 +12,42 @@ logfile=pyweek_log1.txt\n"
 validCmd = ["nick","channel","server","port",
             "logfile","plugins","password"]
 
+class ListStack(object):
+    def __init__(self):
+
+        self.stack = [[]]
+
+        self.closed_stacks = []
+
+    def value(self, val):
+        self.get_current_stack().append(val)
+
+    def push(self):
+        self.stack.append([])
+
+    def pop(self):
+        self.closed_stacks.append(self.get_num_stack())
+
+    def get_current_stack(self):
+        a = []
+        for i in xrange(len(self.stack)):
+            i = len(self.stack) - i - 1
+            if not i in self.closed_stacks:
+                return self.stack[i]
+        return []
+
+    def get_num_stack(self):
+        return self.stack.index(self.get_current_stack())
+
+    def get_finished_stack(self):
+        new = []
+        for i in xrange(len(self.stack)):
+            if i == 0:
+                new.extend(self.stack[i])
+            else:
+                new.append(self.stack[i])
+        return new
+
 class Preferences(object):
     """
     A class used to load preferences, or create new ones
@@ -68,10 +104,23 @@ class Preferences(object):
         for i in xrange(len(values)):
             values[i] = values[i].strip()
 
-        ret = []
+        stack = ListStack()
         for i in values:
-            ret.append(self.get_value(i))
-        return ret, num+1
+            if i[0] == "[":
+                stack.push()
+                if i[-1] == "]":
+                    stack.value(self.get_value(i[1:-1]))
+                    stack.pop()
+                else:
+                    stack.value(self.get_value(i[1::]))
+            else:
+                if i[-1] == "]":
+                    stack.value(self.get_value(i[0:-1]))
+                    stack.pop()
+                else:
+                    stack.value(self.get_value(i))
+        values = stack.get_finished_stack()
+        return values, num+1
 
     def readPreferences(self, inFile):
         fileContent = inFile.readlines()
@@ -93,6 +142,4 @@ class Preferences(object):
             if command in validCmd:
                 self.data[command] = value
             lineN += 1
-a = Preferences()
-print a.data
         
