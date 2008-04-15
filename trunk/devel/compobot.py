@@ -17,6 +17,18 @@ class PluginList(object):
         self.descriptors.append([item, priority])
         self.build_list()
 
+    def remove_item(self, item):
+        for i in self.descriptors:
+            if i[0].name == item:
+                self.descriptors.remove(i)
+        self.build_list()
+
+    def reprioritize(self, item, priority):
+        for i in xrange(len(self.descriptors)):
+            if self.descriptors[i][0].name == item:
+                self.descriptors[i][1] = priority
+        self.build_list()
+
     def build_list(self):
         def sort_func(x, y):
             if x[1] > y[1]:
@@ -32,8 +44,6 @@ class PluginList(object):
 
     def dispatch_event(self, command, args, do_all):
         for i in self.list:
-            if not do_all:
-                print "sent to", i
             try:
                 a = getattr(i, command)(*args)
                 if a == True and not do_all:
@@ -49,7 +59,8 @@ class SimpleBot(irc.IRCClient):
     def __init__(self):
         self.prefs = prefs
 
-        self.plugins = PluginList()
+        self.plugin_list = PluginList()
+        self.plugins = self.plugin_list.list
 
         self.loops = 0
 
@@ -66,12 +77,21 @@ class SimpleBot(irc.IRCClient):
             plug = get_plugin(plug)
         if plug:
             plug = plug(self, prefs)
-            self.plugins.add_item(plug, priority)
+            self.plugin_list.add_item(plug, priority)
+            self.plugins = self.plugin_list.list
         else:
             print "plugin '%s' could not be loaded\nContinuing merrily..."%orig
 
+    def remove_plugin(self, plug):
+        self.plugin_list.remove_item(plug)
+        self.plugins = self.plugin_list.list
+
+    def reprioritize(self, plug, priority):
+        self.plugin_list.reprioritize(plug, priority)
+        self.plugins = self.plugin_list.list
+
     def send_to_plugins(self, command, args, do_all=False):
-        self.plugins.dispatch_event(command, args, do_all)
+        self.plugin_list.dispatch_event(command, args, do_all)
 
     def connectionMade(self):
         """Called when we connect to the server."""

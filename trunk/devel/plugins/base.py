@@ -5,6 +5,8 @@ class Plugin(object):
 
         self.prefs = prefs
 
+        self.name = "base"
+
     def connect(self):
         """Called when our bot connects to the server."""
         pass

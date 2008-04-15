@@ -15,6 +15,8 @@ class Plugin(base.Plugin):
                          ["...I am ignoring you now", 6],
                          ["...", None]]
 
+        self.name = "chatter"
+
     def get_message(self, user):
         if user:
             if not user in self.msg_from_users:
