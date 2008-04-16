@@ -128,6 +128,11 @@ class SimpleBot(irc.IRCClient):
             #regular msg?
             self.send_to_plugins("generalmessage", (user, channel, msg))
 
+
+    def msg(self, channel, msg):
+        irc.IRCClient.msg(self, channel, msg)
+        self.privmsg(self.username, channel, msg)
+
     def action(self, user, channel, msg):
         """This will get called when the bot sees someone do an action."""
         user = user.split("!", 1)[0]

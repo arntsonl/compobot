@@ -30,5 +30,5 @@ class Plugin(base.Plugin):
             if not user == self.bot.username:
                 self.log("[%s] <%s> %s" % (channel, user, msg))
             else:
-                self.log("[%s] <~~To Me> %s" % (channel, msg))
+                self.log("[%s] <*ME*> %s" % (channel, msg))
         return None
