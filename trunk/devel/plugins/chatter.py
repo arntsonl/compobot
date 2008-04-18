@@ -3,16 +3,13 @@ import base
 class Plugin(base.Plugin):
     def __init__(self, bot, prefs):
         base.Plugin.__init__(self, bot, prefs)
-        self.take_command = False #this makes sure we don't respond to commands
-        #command_parser should handle that!
-        #if you aren't running command_parser though - you can turn this to True
 
         self.msg_from_users = {} #a little bit of niceness ;)
-        self.all_msgs = [["I am just a bot", 2],
-                         ['Hello? I said - "I am just a bot" - do you understand?', 3],
-                         ["You don't understand then - stop talking to me!", 4],
-                         ["You are starting to make me pay more attention to you than I should - good day...", 5],
-                         ["...I am ignoring you now", 6],
+        self.all_msgs = [["I am just a bot", 0],
+                         ['Hello? I said - "I am just a bot" - do you understand?', 1],
+                         ["You don't understand then - stop talking to me!", 2],
+                         ["You are starting to make me pay more attention to you than I should - good day...", 3],
+                         ["...I am ignoring you now", 4],
                          ["...", None]]
 
         self.name = "chatter"

@@ -10,7 +10,8 @@ port=6667\n\
 logfile=pyweek_log1.txt\n"
 
 validCmd = ["nick","channel","server","port",
-            "logfile","plugins","password"]
+            "logfile","plugins","password",
+            "reg_email", "reg_pass"]
 
 class ListStack(object):
     def __init__(self):
@@ -58,7 +59,9 @@ class Preferences(object):
         self.data = {} # dictionary full of our data
         self.loadPreferencesFile(self.file)
 
-        self.data["port"] = int(self.data["port"])
+        for i in validCmd:
+            if not i in self.data:
+                self.data[i] = None
 
     def loadPreferencesFile(self, filename):
         if not (os.path.exists(filename)):
@@ -70,6 +73,8 @@ class Preferences(object):
         inFile.close()
 
     def get_value(self, val):
+        if val == "None":
+            return None
         if val[0] == '"' and val[-1] == '"':
             return val[1:-1]
         else:
@@ -135,6 +140,10 @@ class Preferences(object):
             line=line.strip("\r\n")
                 
             command, value = line.split("=")
+            if not value:
+                value = "None"
+            if not command:
+                command = None
             if value[0] == "[":
                 value, line_skip = self.get_list(value, fileContent, lineN)
             else:
@@ -142,4 +151,3 @@ class Preferences(object):
             if command in validCmd:
                 self.data[command] = value
             lineN += 1
-        
