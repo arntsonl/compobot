@@ -12,9 +12,9 @@ class Plugin(base.Plugin):
         if cmd and cmd[0] == "HELP":
             if len(cmd) >= 2 and cmd[1] == "commands":
                 self.bot.msg(self.bot.channel, "How to command me:")
-                self.bot.msg(self.bot.channel, "All commands must be  aprivate message to me")
+                self.bot.msg(self.bot.channel, "All commands must be sent as a private message to me")
                 self.bot.msg(self.bot.channel, "like: '/msg botname'")
-                self.bot.msg(self.bot.channel, "The first command you must always do for me to understand you is DO")
+                self.bot.msg(self.bot.channel, "The first command you must always do, for me to understand you, is 'DO'")
                 self.bot.msg(self.bot.channel, "So a command looks like this:")
                 self.bot.msg(self.bot.channel, " /msg botname DO COMMAND args")
                 self.bot.msg(self.bot.channel, "Commands:")
@@ -25,7 +25,7 @@ class Plugin(base.Plugin):
                 self.bot.msg(self.bot.channel, "LOAD PLUGIN pluginname priority")
                 self.bot.msg(self.bot.channel, "UNLOAD PLUGIN pluginname")
                 self.bot.msg(self.bot.channel, "SET PRIORITY pluginname new_priority")
-                self.bot.msg(self.bot.channel, "These should be prett self explanatory - but if not...")
+                self.bot.msg(self.bot.channel, "These should be pretty self explanatory - but if not...")
                 self.bot.msg(self.bot.channel, "...a better help command should be available soon!!!")
                 self.bot.msg(self.bot.channel, "Good luck!")
             elif len(cmd) == 1:

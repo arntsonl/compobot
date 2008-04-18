@@ -46,10 +46,11 @@ class PluginList(object):
         for i in self.list:
             try:
                 a = getattr(i, command)(*args)
-                if a == True and not do_all:
-                    break
+                if a and not do_all:
+                    return True
             except:
                 print "Error calling %s in plugin: %s with args: %s"%(command, i, args)
+        return False
 
 class SimpleBot(irc.IRCClient):
     nickname = prefs["nick"]
@@ -91,7 +92,7 @@ class SimpleBot(irc.IRCClient):
         self.plugins = self.plugin_list.list
 
     def send_to_plugins(self, command, args, do_all=False):
-        self.plugin_list.dispatch_event(command, args, do_all)
+        return self.plugin_list.dispatch_event(command, args, do_all)
 
     def connectionMade(self):
         """Called when we connect to the server."""
@@ -116,17 +117,17 @@ class SimpleBot(irc.IRCClient):
         """This will get called when the bot receives a message."""
         user = user.split('!', 1)[0]
 
-        self.send_to_plugins("anymessage", (user, channel, msg))
+        cont = self.send_to_plugins("anymessage", (user, channel, msg))
+        if not cont:
+            if self.nickname in msg:
+                self.send_to_plugins("nickmessage", (user, channel, msg))
 
-        if self.nickname in msg:
-            self.send_to_plugins("nickmessage", (user, channel, msg))
+            elif channel == self.nickname:
+                self.send_to_plugins("privatemessage", (user, channel, msg))
 
-        elif channel == self.nickname:
-            self.send_to_plugins("privatemessage", (user, channel, msg))
-
-        else:
-            #regular msg?
-            self.send_to_plugins("generalmessage", (user, channel, msg))
+            else:
+                #regular msg?
+                self.send_to_plugins("generalmessage", (user, channel, msg))
 
 
     def msg(self, channel, msg):
