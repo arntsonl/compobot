@@ -23,6 +23,10 @@ class Plugin(object):
         """Called when bot joins channel."""
         pass
 
+    def userjoin(self, user, channel):
+        """Called when a new user joins the channel"""
+        pass
+
     def nickmessage(self, user, channel, msg):
         """Called if the bot receies a message that contains our nick."""
         pass
