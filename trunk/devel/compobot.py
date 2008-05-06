@@ -113,6 +113,9 @@ class SimpleBot(irc.IRCClient):
         """This will get called when the bot joins the channel."""
         self.send_to_plugins("join", (channel,))
 
+    def userJoined(self, user, channel):
+        self.send_to_plugins("userjoin", (user, channel))
+
     def privmsg(self, user, channel, msg):
         """This will get called when the bot receives a message."""
         user = user.split('!', 1)[0]
