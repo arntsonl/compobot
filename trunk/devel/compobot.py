@@ -150,7 +150,7 @@ class SimpleBot(irc.IRCClient):
 
     def make_reactor_call(self, *blank):
         self.send_to_plugins("reactorchance", (reactor,), True)
-        reactor.callLater(0, self.make_reactor_call, ())
+        reactor.callLater(10, self.make_reactor_call, ())
 
     def __kill_reactor(self, *blank):
         self.send_to_plugins("disconnect", ())
