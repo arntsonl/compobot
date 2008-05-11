@@ -51,8 +51,3 @@ class Plugin(object):
     def usernickchange(self, old, new):
         """This gets when a user changes there nick."""
         pass
-
-    def reactorchance(self, reactor):
-        """This gets called when the bot gives us a chance to give a command to the reactor,
-           such as a call to reactor.callLater."""
-        pass

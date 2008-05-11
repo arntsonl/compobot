@@ -56,6 +56,7 @@ class SimpleBot(irc.IRCClient):
     nickname = prefs["nick"]
     password = prefs["password"]
     channel = '#' + prefs["channel"]
+    reactor = reactor
 
     def __init__(self):
         self.prefs = prefs
@@ -147,11 +148,6 @@ class SimpleBot(irc.IRCClient):
         old_nick = prefix.split("!")[0]
         new_nick = params[0]
         self.send_to_plugins("usernickchange", (old_nick, new_nick))
-
-    def make_reactor_call(self, *blank):
-        self.send_to_plugins("reactorchance", (reactor,), True)
-        reactor.callLater(10, self.make_reactor_call, ())
-
     def __kill_reactor(self, *blank):
         self.send_to_plugins("disconnect", ())
         reactor.stop()
@@ -193,7 +189,6 @@ class SimpleBotFactory(protocol.ClientFactory):
 def run_factory(factory):
     log.startLogging(sys.stdout)
     reactor.connectTCP(prefs["server"], prefs["port"], factory)
-    reactor.callLater(0, factory.bot.make_reactor_call, ())
 
     reactor.run()
 
