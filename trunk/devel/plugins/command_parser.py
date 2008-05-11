@@ -25,6 +25,7 @@ class Plugin(base.Plugin):
                 self.bot.msg(self.bot.channel, "LOAD PLUGIN pluginname priority")
                 self.bot.msg(self.bot.channel, "UNLOAD PLUGIN pluginname")
                 self.bot.msg(self.bot.channel, "SET PRIORITY pluginname new_priority")
+                self.bot.msg(self.bot.channel, "SET PRIORITY pluginname new_priority")
                 self.bot.msg(self.bot.channel, "These should be pretty self explanatory - but if not...")
                 self.bot.msg(self.bot.channel, "...a better help command should be available soon!!!")
                 self.bot.msg(self.bot.channel, "Good luck!")
